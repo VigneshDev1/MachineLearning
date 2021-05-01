@@ -67,8 +67,10 @@ print(model.coef_, model.intercept_)
 # Now using the determined model formula, we are testing the data inputs and comparing results with y
 y_predicted = model.predict(X)
 
-print(sum(y == y_predicted))
+print(model.predict([X[0]]))
+print(sum(y == y_predicted)/y.shape[0])
+print(model.score(X,y)) # same as the formula above
 
 
-print(type(cancer_df['target']))
+print(X.shape)
 
