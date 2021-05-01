@@ -83,7 +83,9 @@ print(["{:.2f}".format(coef) for coef in model.coef_[0]], model.intercept_)
 # Now using the determined model formula, we compare the predicted results with y and get the metrics
 GetModelMetric(model, X, y)
 #_____________Split data into training and test data __________________
-[Xtrain, Xtest, ytrain, ytest] = TTS(X,y,train_size=0.7)  # train_size can be used to define % split between test and train
+# train_size can be used to define % split between test and train
+# random_stat can be used to permit the code to use the same test data set (int mean the state, keep same for same data)
+[Xtrain, Xtest, ytrain, ytest] = TTS(X,y,train_size=0.7, random_state=12)
 print(X.shape, y.shape, Xtrain.shape, ytrain.shape, Xtest.shape, ytest.shape)   # checking the size of shapes
 
 model.fit(Xtrain, ytrain)
