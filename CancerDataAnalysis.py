@@ -5,7 +5,24 @@ scikit-learn has a build in breast cancer dataset
 
 from sklearn.datasets import load_breast_cancer
 from sklearn.linear_model import LogisticRegression
+import sklearn.metrics as met
+from sklearn.model_selection import train_test_split as TTS
 import pandas as pd
+
+
+def GetModelMetric(model, X, y):
+    # Now using the determined model formula, we are testing the data inputs and comparing results with y
+    y_predicted = model.predict(X)
+    print(model.score(X, y))  # same as sum(y == y_predicted)/y.shape[0]
+
+    metric = [met.accuracy_score(y, y_predicted), met.precision_score(y, y_predicted), met.recall_score(y, y_predicted),
+              met.f1_score(y, y_predicted)] # note accuracy is the same score
+    print("Accuracy: {0:.2%} \nPrecision: {1:.2%} \nRecall: {2:.2%} \nF1 Score: {3:.2%}".format(metric[0], metric[1],
+                                                                                                metric[2], metric[3]))
+    CMat = met.confusion_matrix(y, y_predicted)
+    print("      Act+          Act- \nPred+ {}          {} \nPred- {}          {}".format(CMat[1][1], CMat[1][0],
+                                                                                          CMat[0][1], CMat[0][0]))
+    # print("      Act-          Act+ \nPred- {}          {} \nPred+ {}          {}".format(CMat[0][0], CMat[0][1],CMat[1][0], CMat[1][1]))
 
 
 cancer_data = load_breast_cancer()  # This is a dictionary with all sorts of information for the dataset
@@ -62,15 +79,15 @@ y= cancer_df['target'].values
 model = LogisticRegression(solver='liblinear')
 model.fit(X, y)
 
-print(model.coef_, model.intercept_)
+print(["{:.2f}".format(coef) for coef in model.coef_[0]], model.intercept_)
+# Now using the determined model formula, we compare the predicted results with y and get the metrics
+GetModelMetric(model, X, y)
+#_____________Split data into training and test data __________________
+[Xtrain, Xtest, ytrain, ytest] = TTS(X,y,train_size=0.7)  # train_size can be used to define % split between test and train
+print(X.shape, y.shape, Xtrain.shape, ytrain.shape, Xtest.shape, ytest.shape)   # checking the size of shapes
 
-# Now using the determined model formula, we are testing the data inputs and comparing results with y
-y_predicted = model.predict(X)
+model.fit(Xtrain, ytrain)
+GetModelMetric(model,Xtest,ytest)
+print(model.score(Xtest,ytest)) # testing the model against the test data
 
-print(model.predict([X[0]]))
-print(sum(y == y_predicted)/y.shape[0])
-print(model.score(X,y)) # same as the formula above
-
-
-print(X.shape)
 
