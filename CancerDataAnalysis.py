@@ -6,6 +6,7 @@ from sklearn.linear_model import LogisticRegression
 import sklearn.metrics as met
 from sklearn.model_selection import train_test_split as TTS
 import pandas as pd
+from matplotlib import pyplot as plt
 
 def GetModelMetric(model, X, y):
     #ROC - Receiver Operating Characteristics
@@ -16,8 +17,9 @@ def GetModelMetric(model, X, y):
     # Define the threshold for target's 0 or 1, and thing lower than threshold will round to false and higher to true.
     # Determine predicted results
 
-    y_predicted = model.predict_proba(X)[:, 1] > 0.66
-
+    y_predicted = model.predict_proba(X)[:, 1]
+    Specificity, Sensitivity, thresholds = met.roc_curve(y, y_predicted)
+    plt.plot(Specificity,Sensitivity)
     # Now using the determined model formula, we are testing the data inputs and comparing results with y
     # y_predicted = model.predict(X)
     print(model.score(X, y))  # same as sum(y == y_predicted)/y.shape[0]
