@@ -14,16 +14,21 @@ def GetModelMetric(model, X, y):
     # Now using the determined model formula, we are testing the data inputs and comparing results with y
     y_predicted = model.predict(X)
     print(model.score(X, y))  # same as sum(y == y_predicted)/y.shape[0]
+    [[TN, FN],[FP, TP]] = met.confusion_matrix(y, y_predicted) #result format : [[TN, FN], [FP, TP]]
+    Specificity = TN / (TN + FP)
 
-    metric = [met.accuracy_score(y, y_predicted), met.precision_score(y, y_predicted), met.recall_score(y, y_predicted),
-              met.f1_score(y, y_predicted)] # note accuracy is the same score
-    print("Accuracy: {0:.2%} \nPrecision: {1:.2%} \nRecall: {2:.2%} \nF1 Score: {3:.2%}".format(metric[0], metric[1],
-                                                                                                metric[2], metric[3]))
-    CMat = met.confusion_matrix(y, y_predicted)
-    print("      Act+          Act- \nPred+ {}          {} \nPred- {}          {}".format(CMat[1][1], CMat[1][0],
-                                                                                          CMat[0][1], CMat[0][0]))
-    # print("      Act-          Act+ \nPred- {}          {} \nPred+ {}          {}".format(CMat[0][0], CMat[0][1],CMat[1][0], CMat[1][1]))
+    metric = {"Accuracy" : met.accuracy_score(y, y_predicted), "Precision" : met.precision_score(y, y_predicted), "Recall/Sensitivity" : met.recall_score(y, y_predicted),
+              "Specificity" : Specificity, "F1 Score" : met.f1_score(y, y_predicted)} # note accuracy is the same score
+    print("Accuracy: {0:.2%} \n"
+          "Precision: {1:.2%} \n"
+          "Recall/Sensitivity: {2:.2%} \n"
+          "Specificity: {3:.2%} \n"
+          "F1 Score: {4:.2%}".format(metric['Accuracy'], metric['Precision'], metric['Recall/Sensitivity'],metric['Specificity'], metric['F1 Score']))
 
+    print("      Act+          Act- \n"
+          "Pred+ {}          {} \n"
+          "Pred- {}          {}".format(TP, FP,
+                                        FN, TN))
 
 cancer_data = load_breast_cancer()  # This is a dictionary with all sorts of information for the dataset
 print(cancer_data.keys())           # {'data', 'target', 'frame', 'target_names', 'DESCR', 'feature_names', 'filename'}
