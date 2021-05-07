@@ -18,8 +18,8 @@ def GetModelMetric(model, X, y):
     # Define the threshold for target's 0 or 1, and thing lower than threshold will round to false and higher to true.
     # Determine predicted results
 
-    #y_predicted = model.predict_proba(X)[:, 1]
-    y_predicted = model.predict(X)
+    y_predicted = model.predict_proba(X)[:, 1] > 0.75
+    #y_predicted = model.predict(X)
     Specificity, Sensitivity, thresholds = met.roc_curve(y, y_predicted)
     one_minus_Specificity = [1-x for x in Specificity]
 
