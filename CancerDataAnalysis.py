@@ -18,15 +18,18 @@ def GetModelMetric(model, X, y):
     # Define the threshold for target's 0 or 1, and thing lower than threshold will round to false and higher to true.
     # Determine predicted results
 
-    y_predicted = model.predict_proba(X)[:, 1]
+    #y_predicted = model.predict_proba(X)[:, 1]
+    y_predicted = model.predict(X)
     Specificity, Sensitivity, thresholds = met.roc_curve(y, y_predicted)
     one_minus_Specificity = [1-x for x in Specificity]
 
-    print(one_minus_Specificity)
-    plt.plot(Specificity,Sensitivity)
+    #print(one_minus_Specificity)
+    plt.plot(one_minus_Specificity,Sensitivity)
     # Now using the determined model formula, we are testing the data inputs and comparing results with y
     # y_predicted = model.predict(X)
     print(model.score(X, y))  # same as sum(y == y_predicted)/y.shape[0]
+    print(y)
+    print(y_predicted)
     [[TN, FP], [FN, TP]] = met.confusion_matrix(y, y_predicted)  # result format : [[TN, FN], [FP, TP]]
     Specificity = TN / (TN + FP) # Specificity = met.precision_recall_fscore_support(y,y_predicted)
 
@@ -46,17 +49,17 @@ def GetModelMetric(model, X, y):
           "Pred- {}          {}".format(TP, FP,
                                         FN, TN))
 
-
+#_______________________________________________________________________________________
 cancer_data = load_breast_cancer()  # This is a dictionary with all sorts of information for the dataset
-print(cancer_data.keys())  # {'data', 'target', 'frame', 'target_names', 'DESCR', 'feature_names', 'filename'}
-
+#print(cancer_data.keys())  # {'data', 'target', 'frame', 'target_names', 'DESCR', 'feature_names', 'filename'}
 otherinfo = []
+
 for i in cancer_data.keys():
     try:
         print("{0} has shape {1}".format(i, cancer_data[i].shape))
     except:
         if cancer_data[i] is not None:
-            otherinfo.append(i + " ------ " + cancer_data[i])
+            otherinfo.append(i + " :::: " + cancer_data[i])
 
 
 #print(cancer_data['target_names'])
