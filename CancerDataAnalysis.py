@@ -6,6 +6,7 @@ from sklearn.linear_model import LogisticRegression
 import sklearn.metrics as met
 from sklearn.model_selection import train_test_split as TTS
 import pandas as pd
+import numpy as np
 from matplotlib import pyplot as plt
 
 def GetModelMetric(model, X, y):
@@ -19,6 +20,9 @@ def GetModelMetric(model, X, y):
 
     y_predicted = model.predict_proba(X)[:, 1]
     Specificity, Sensitivity, thresholds = met.roc_curve(y, y_predicted)
+    one_minus_Specificity = [1-x for x in Specificity]
+
+    print(one_minus_Specificity)
     plt.plot(Specificity,Sensitivity)
     # Now using the determined model formula, we are testing the data inputs and comparing results with y
     # y_predicted = model.predict(X)
