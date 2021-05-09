@@ -18,13 +18,15 @@ def GetModelMetric(model, X, y):
     # Define the threshold for target's 0 or 1, and thing lower than threshold will round to false and higher to true.
     # Determine predicted results
 
-    y_predicted = model.predict_proba(X)[:, 1] > 0.75
+    y_predicted = model.predict_proba(X)[:, 1]
+    print("TEST:")
+    print(["{:.2f}".format(ydec) for ydec in y_predicted])
     #y_predicted = model.predict(X)
-    Specificity, Sensitivity, thresholds = met.roc_curve(y, y_predicted)
-    one_minus_Specificity = [1-x for x in Specificity]
+    one_minus_Specificity, Sensitivity, thresholds = met.roc_curve(y, y_predicted)
 
     #print(one_minus_Specificity)
     plt.plot(one_minus_Specificity,Sensitivity)
+    plt.show()
     # Now using the determined model formula, we are testing the data inputs and comparing results with y
     # y_predicted = model.predict(X)
     print(model.score(X, y))  # same as sum(y == y_predicted)/y.shape[0]
@@ -108,7 +110,7 @@ GetModelMetric(model, X, y)
 # _____________Split data into training and test data __________________
 # train_size can be used to define % split between test and train
 # random_stat can be used to permit the code to use the same test data set (int mean the state, keep same for same data)
-[Xtrain, Xtest, ytrain, ytest] = TTS(X, y, train_size=0.65, random_state=12)
+[Xtrain, Xtest, ytrain, ytest] = TTS(X, y, train_size=0.5, random_state=12)
 print(X.shape, y.shape, Xtrain.shape, ytrain.shape, Xtest.shape, ytest.shape)  # checking the size of shapes
 
 model.fit(Xtrain, ytrain)
