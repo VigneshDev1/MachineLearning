@@ -33,6 +33,7 @@ def GetModelMetric(model, X, y):
     metric = {"Accuracy": met.accuracy_score(y, y_predicted), "Precision": met.precision_score(y, y_predicted),
               "Recall/Sensitivity": met.recall_score(y, y_predicted),
               "Specificity": Specificity, "F1 Score": met.f1_score(y, y_predicted)}  # note accuracy is the same score
+    return metric
 
     print("Accuracy: {0:.2%} \n"
           "Precision: {1:.2%} \n"
@@ -58,16 +59,20 @@ df['male'] = df['Sex'] == "male"
 X = df[['Pclass', 'male', 'Age', 'Siblings/Spouses', 'Parents/Children', 'Fare']].values
 y = df['Survived'].values
 model = LogisticRegression()
+#_________Using Sklearn's Test & Train Model_________
 Xtrain, Xtest, ytrain, ytest = TTS(X,y)
-model.fit(Xtrain,ytrain)
 
-GetModelMetric(model,Xtest,ytest)
-# K Fold cross validation__________________
+#__________Using K-Fold cross validation approach____________________
+
 X = df[['Age', 'Fare']].values[:6]
 y = df[['Survived']].values[:6]
 kFold = KFold(n_splits=3,shuffle=True) # good practice to shuffle the data, n split is the # of chunks to cluster data
 # KFold is a generator
 print(list(kFold.split(X)))
+
 for trainset, testset in kFold.split(X):
     print("Train data: {}   <>   Test data: {}".format(trainset,testset))
+model.fit(Xtrain,ytrain)
+metric = GetModelMetric(model,Xtest,ytest)
+
 #print(df.head())
