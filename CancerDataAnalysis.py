@@ -27,11 +27,11 @@ def GetModelMetric(model, X, y):
     #print(one_minus_Specificity)
     plt.plot(one_minus_Specificity,Sensitivity)
     plt.show()
+
+    y_predicted=y_predicted>=0.75 # selected threshold 0.75
     # Now using the determined model formula, we are testing the data inputs and comparing results with y
     # y_predicted = model.predict(X)
     print(model.score(X, y))  # same as sum(y == y_predicted)/y.shape[0]
-    print(y)
-    print(y_predicted)
     [[TN, FP], [FN, TP]] = met.confusion_matrix(y, y_predicted)  # result format : [[TN, FN], [FP, TP]]
     Specificity = TN / (TN + FP) # Specificity = met.precision_recall_fscore_support(y,y_predicted)
 
