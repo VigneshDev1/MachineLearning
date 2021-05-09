@@ -66,13 +66,16 @@ Xtrain, Xtest, ytrain, ytest = TTS(X,y)
 
 X = df[['Age', 'Fare']].values[:6]
 y = df[['Survived']].values[:6]
+print(X)
+print(y)
 kFold = KFold(n_splits=3,shuffle=True) # good practice to shuffle the data, n split is the # of chunks to cluster data
 # KFold is a generator
-print(list(kFold.split(X)))
+print(list(kFold.split(X))) # provides the list of indices split only
 
 for trainset, testset in kFold.split(X):
     print("Train data: {}   <>   Test data: {}".format(trainset,testset))
-model.fit(Xtrain,ytrain)
-metric = GetModelMetric(model,Xtest,ytest)
+    model.fit(X[trainset], y[trainset])
+    metric = GetModelMetric(model,X[testset],y[testset])
+    print(metric)
 
 #print(df.head())
